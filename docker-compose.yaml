@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: .
+      target: debug
+    container_name: dds_backend
+    restart: always
+    environment:
+      ENV: DEV
+    ports:
+    - "8000:8000"
+    - "5678:5678"
+    volumes:
+    - db_data:/app/DB
+
+volumes:
+  db_data:

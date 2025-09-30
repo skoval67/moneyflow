@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15
+    container_name: resume_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: resume_db
+    ports:
+    - "5432:5432"
+    volumes:
+    - db_data:/var/lib/postgresql/data
+
+
+  backend:
+    image: ghcr.io/skoval67/resume_app/backend:latest
+    container_name: resume_backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/resume_db
+      JWT_SECRET: ${JWT_SECRET}
+      ENV: PROD
+    depends_on:
+    - db
+    ports:
+    - "8000:8000"
+
+  frontend:
+    image: ghcr.io/skoval67/resume_app/frontend:latest
+    container_name: resume_frontend
+    restart: always
+    ports:
+    - "80:80"
+    depends_on:
+    - backend
+
+volumes:
+  db_data:
