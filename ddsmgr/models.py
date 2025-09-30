@@ -54,7 +54,7 @@ class Transaction(models.Model):
     type = models.ForeignKey(Type, on_delete=models.PROTECT, related_name="transactions", verbose_name="Тип")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="transactions", verbose_name="Категория")
     subcategory = models.ForeignKey(Subcategory, on_delete=models.PROTECT, related_name="transactions", verbose_name="Подкатегория")
-    amount = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))], verbose_name="Количество")
+    amount = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))], verbose_name="Сумма")
     comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
 
     class Meta:

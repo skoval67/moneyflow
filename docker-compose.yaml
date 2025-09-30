@@ -3,15 +3,46 @@ services:
     build:
       context: .
       target: debug
-    container_name: dds_backend
-    restart: always
     environment:
       ENV: DEV
     ports:
-    - "8000:8000"
     - "5678:5678"
     volumes:
     - db_data:/app/DB
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`dds.tripleap.ru`)
+      - traefik.http.routers.backend.entrypoints=websecure
+      - traefik.http.routers.backend.tls.certresolver=myresolver
+    networks:
+      - traefik
+
+  frontend:
+    image: traefik:latest
+    command:
+      - --api.insecure=true # For accessing Traefik dashboard
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.email=svkoval@mail.ru
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # For Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt # Volume for storing Let's Encrypt certificates
+    networks:
+      - traefik
 
 volumes:
   db_data:
+  letsencrypt:
+
+networks:
+  traefik:
+    external: true

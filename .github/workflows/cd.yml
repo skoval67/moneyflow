@@ -19,10 +19,8 @@ jobs:
 
       - name: Stack Deploy
         uses: cssnr/stack-deploy-action@v1
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         with:
-          name: resume_app
+          name: moneyapp
           file: docker-compose-prod.yaml
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}

@@ -26,6 +26,12 @@ SECRET_KEY = "django-insecure-du3*%g)^omp0$558x9vnebf*wgx5rr09#ua=@@c_54@*k0c4=n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://dds.tripleap.ru",
+    "http://dds.tripleap.ru",
+    "https://tripleap.ru",   # если фронт кидает куки от корневого домена
+]
+
 ALLOWED_HOSTS = ["*"]
 
 
